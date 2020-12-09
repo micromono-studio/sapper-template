@@ -1,0 +1,17 @@
+// Colors
+$color--primary: #000;
+
+// Typography
+$font-family--primary: 'Basier Square', sans-serif;
+
+$frame-gutter: 20px;
+
+// Breakpoints
+$breakpoints: (
+    'default': 375,
+    'mini': 762,
+    'small': 960,
+    'smedium': 1024,
+    'medium': 1440,
+    'large': 1920,
+) !default;

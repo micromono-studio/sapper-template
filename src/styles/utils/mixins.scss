@@ -1,0 +1,73 @@
+// prettier-ignore
+// From css-tricks
+// https://css-tricks.com/snippets/sass/mixin-manage-breakpoints/
+@mixin from($breakpoint) {
+	// If the key exists in the map
+	@if map-has-key($breakpoints, $breakpoint) {
+		// Prints a media query based on the value
+		@media (min-width: #{map-get($breakpoints, $breakpoint)}px) {
+			@content;
+		}
+	}
+
+	// If the key doesn't exist in the map
+	@else {
+		@warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. "
+		  + "Available breakpoints are: #{map-keys($breakpoints)}.";
+	}
+}
+@mixin up-to($breakpoint) {
+	// If the key exists in the map
+	@if map-has-key($breakpoints, $breakpoint) {
+		// Prints a media query based on the value
+		@media (max-width: #{map-get($breakpoints, $breakpoint)}px) {
+			@content;
+		}
+	}
+
+	// If the key doesn't exist in the map
+	@else {
+		@warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. "
+		  + "Available breakpoints are: #{map-keys($breakpoints)}.";
+	}
+}
+
+@function strip-unit($number) {
+	@if type-of($number) == "number" and not unitless($number) {
+		@return $number / ($number * 0 + 1);
+	}
+
+	@return $number;
+}
+
+@function rem($val) {
+	@return strip-unit($val * $remSize);
+}
+
+// Dynamic font scaling
+@mixin font-scale($min, $max, $fromBp, $toBp) {
+	$fromWidth: map-get($breakpoints, $fromBp);
+	$toWidth: map-get($breakpoints, $toBp);
+	// prettier-ignore
+	// font-size: calc(#{$min});
+	font-size: calc(
+		#{$min}px + #{$max - $min} * (100vw - #{$fromWidth}px) / #{$toWidth - $fromWidth}
+	);
+}
+
+@function dynamic($min, $max, $fromBp, $toBp) {
+	$fromWidth: map-get($breakpoints, $fromBp);
+	$toWidth: map-get($breakpoints, $toBp);
+	@return calc(
+		#{$min}px + #{($max - $min)} * (100vw - #{$fromWidth}px) / #{(
+				$toWidth - $fromWidth
+			)}
+	);
+}
+@function dynamicRaw($min, $max, $fromBp, $toBp) {
+	$fromWidth: map-get($breakpoints, $fromBp);
+	$toWidth: map-get($breakpoints, $toBp);
+	@return #{$min}px + #{($max - $min)} * (100vw - #{$fromWidth}px) / #{(
+			$toWidth - $fromWidth
+		)};
+}
